@@ -19,6 +19,7 @@ per_type_decoder_f ENUMERATED_decode_uper;
 per_type_encoder_f ENUMERATED_encode_uper;
 per_type_decoder_f ENUMERATED_decode_aper;
 per_type_encoder_f ENUMERATED_encode_aper;
+type_compare_f     ENUMERATED_compare;
 
 #ifdef __cplusplus
 }

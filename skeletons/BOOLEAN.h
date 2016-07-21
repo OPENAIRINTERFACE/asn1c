@@ -30,6 +30,7 @@ per_type_decoder_f BOOLEAN_decode_uper;
 per_type_encoder_f BOOLEAN_encode_uper;
 per_type_decoder_f BOOLEAN_decode_aper;
 per_type_encoder_f BOOLEAN_encode_aper;
+type_compare_f     BOOLEAN_compare;
 
 #ifdef __cplusplus
 }

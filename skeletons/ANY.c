@@ -24,7 +24,8 @@ asn_TYPE_descriptor_t asn_DEF_ANY = {
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
 	OCTET_STRING_decode_aper,
-	OCTET_STRING_encode_aper,
+  OCTET_STRING_encode_aper,
+  OCTET_STRING_compare,
 	0, /* Use generic outmost tag fetcher */
 	0, 0, 0, 0,
 	0,	/* No PER visible constraints */

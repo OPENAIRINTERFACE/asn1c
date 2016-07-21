@@ -54,6 +54,7 @@ per_type_decoder_f SEQUENCE_decode_uper;
 per_type_encoder_f SEQUENCE_encode_uper;
 per_type_decoder_f SEQUENCE_decode_aper;
 per_type_encoder_f SEQUENCE_encode_aper;
+type_compare_f     SEQUENCE_compare;
 
 #ifdef __cplusplus
 }

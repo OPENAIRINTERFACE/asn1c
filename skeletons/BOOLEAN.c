@@ -25,7 +25,8 @@ asn_TYPE_descriptor_t asn_DEF_BOOLEAN = {
 	BOOLEAN_decode_uper,	/* Unaligned PER decoder */
 	BOOLEAN_encode_uper,	/* Unaligned PER encoder */
 	BOOLEAN_decode_aper,	/* Aligned PER decoder */
-	BOOLEAN_encode_aper,	/* Aligned PER encoder */
+  BOOLEAN_encode_aper,  /* Aligned PER encoder */
+  BOOLEAN_compare,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_BOOLEAN_tags,
 	sizeof(asn_DEF_BOOLEAN_tags) / sizeof(asn_DEF_BOOLEAN_tags[0]),
@@ -326,3 +327,22 @@ BOOLEAN_encode_aper(asn_TYPE_descriptor_t *td,
 
 	_ASN_ENCODED_OK(er);
 }
+
+asn_comp_rval_t *
+BOOLEAN_compare(asn_TYPE_descriptor_t *td1,
+  const void *sptr1, asn_TYPE_descriptor_t *td2, const void *sptr2) {
+  const BOOLEAN_t *st1 = (const BOOLEAN_t *)sptr1;
+  const BOOLEAN_t *st2 = (const BOOLEAN_t *)sptr2;
+  asn_comp_rval_t *res = NULL;
+
+  COMPARE_CHECK_ARGS(td1, td2, sptr1, sptr2, res)
+
+  if (*st1 == *st2) return NULL;
+  res = calloc(1, sizeof(asn_comp_rval_t));
+  res->name = td1->name;
+  res->structure1 = sptr1;
+  res->structure2 = sptr2;
+  res->err_code = COMPARE_ERR_CODE_NO_MATCH;
+  return res;
+}
+

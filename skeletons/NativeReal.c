@@ -33,7 +33,8 @@ asn_TYPE_descriptor_t asn_DEF_NativeReal = {
 	NativeReal_decode_uper,
 	NativeReal_encode_uper,
 	NativeReal_decode_aper,
-	NativeReal_encode_aper,
+  NativeReal_encode_aper,
+  NativeReal_compare,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeReal_tags,
 	sizeof(asn_DEF_NativeReal_tags) / sizeof(asn_DEF_NativeReal_tags[0]),
@@ -405,3 +406,30 @@ NativeReal_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	}
 }
 
+asn_comp_rval_t *
+NativeReal_compare(asn_TYPE_descriptor_t *td1, const void *sptr1,
+                   asn_TYPE_descriptor_t *td2, const void *sptr2) {
+  const REAL_t *st1 = (const REAL_t *)sptr1;
+  const REAL_t *st2 = (const REAL_t *)sptr2;
+  asn_comp_rval_t *res = NULL;
+
+  COMPARE_CHECK_ARGS(td1, td2, sptr1, sptr2, res)
+
+  if (st1->size != st2->size) {
+    res = calloc(1, sizeof(asn_comp_rval_t));
+    res->name = td1->name;
+    res->structure1 = sptr1;
+    res->structure2 = sptr2;
+    res->err_code = COMPARE_ERR_CODE_NO_MATCH;
+    return res;
+  }
+  if (0 != memcmp(st1->buf, st2->buf, st1->size)) {
+    res = calloc(1, sizeof(asn_comp_rval_t));
+    res->name = td1->name;
+    res->structure1 = sptr1;
+    res->structure2 = sptr2;
+    res->err_code = COMPARE_ERR_CODE_NO_MATCH;
+    return res;
+  }
+  return NULL;
+}

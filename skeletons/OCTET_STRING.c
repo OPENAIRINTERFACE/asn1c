@@ -37,7 +37,8 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 	OCTET_STRING_decode_uper,	/* Unaligned PER decoder */
 	OCTET_STRING_encode_uper,	/* Unaligned PER encoder */
 	OCTET_STRING_decode_aper,	/* Aligned PER decoder */
-	OCTET_STRING_encode_aper,	/* Aligned PER encoder */
+  OCTET_STRING_encode_aper, /* Aligned PER encoder */
+  OCTET_STRING_compare,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_OCTET_STRING_tags,
 	sizeof(asn_DEF_OCTET_STRING_tags)
@@ -2160,3 +2161,30 @@ OCTET_STRING_new_fromBuf(asn_TYPE_descriptor_t *td, const char *str, int len) {
 	return st;
 }
 
+asn_comp_rval_t *
+OCTET_STRING_compare(asn_TYPE_descriptor_t *td1,
+  const void *sptr1, asn_TYPE_descriptor_t *td2, const void *sptr2) {
+  const OCTET_STRING_t *st1 = (const OCTET_STRING_t *)sptr1;
+  const OCTET_STRING_t *st2 = (const OCTET_STRING_t *)sptr2;
+  asn_comp_rval_t *res = NULL;
+
+  COMPARE_CHECK_ARGS(td1, td2, sptr1, sptr2, res)
+
+  if (st1->size != st2->size) {
+    res = calloc(1, sizeof(asn_comp_rval_t));
+    res->name = td1->name;
+    res->structure1 = sptr1;
+    res->structure2 = sptr2;
+    res->err_code = COMPARE_ERR_CODE_NO_MATCH;
+    return res;
+  }
+  if (0 != memcmp(st1->buf, st2->buf, st1->size)) {
+    res = calloc(1, sizeof(asn_comp_rval_t));
+    res->name = td1->name;
+    res->structure1 = sptr1;
+    res->structure2 = sptr2;
+    res->err_code = COMPARE_ERR_CODE_NO_MATCH;
+    return res;
+  }
+  return NULL;
+}

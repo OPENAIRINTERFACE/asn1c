@@ -31,6 +31,7 @@ per_type_decoder_f NativeInteger_decode_uper;
 per_type_encoder_f NativeInteger_encode_uper;
 per_type_decoder_f NativeInteger_decode_aper;
 per_type_encoder_f NativeInteger_encode_aper;
+type_compare_f     NativeInteger_compare;
 
 #ifdef __cplusplus
 }

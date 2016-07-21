@@ -27,6 +27,7 @@ per_type_decoder_f NULL_decode_uper;
 per_type_encoder_f NULL_encode_uper;
 per_type_decoder_f NULL_decode_aper;
 per_type_encoder_f NULL_encode_aper;
+type_compare_f     NULL_compare;
 
 #ifdef __cplusplus
 }

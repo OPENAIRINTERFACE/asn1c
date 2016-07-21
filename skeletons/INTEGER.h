@@ -43,6 +43,7 @@ per_type_decoder_f INTEGER_decode_uper;
 per_type_encoder_f INTEGER_encode_uper;
 per_type_decoder_f INTEGER_decode_aper;
 per_type_encoder_f INTEGER_encode_aper;
+type_compare_f     INTEGER_compare;
 
 /***********************************
  * Some handy conversion routines. *

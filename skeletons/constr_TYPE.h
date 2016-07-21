@@ -41,7 +41,8 @@ typedef struct asn_struct_ctx_s {
 #include <xer_encoder.h>	/* Encoder into XER (XML, text) */
 #include <per_decoder.h>	/* Packet Encoding Rules decoder */
 #include <per_encoder.h>	/* Packet Encoding Rules encoder */
-#include <constraints.h>	/* Subtype constraints support */
+#include <constraints.h>  /* Subtype constraints support */
+#include <compare.h>      /* Comparison */
 
 /*
  * Free the structure according to its specification.
@@ -101,6 +102,7 @@ typedef struct asn_TYPE_descriptor_s {
 	per_type_encoder_f *uper_encoder;	/* Unaligned PER encoder */
 	per_type_decoder_f *aper_decoder;	/* Aligned PER decoder */
 	per_type_encoder_f *aper_encoder;	/* Aligned PER encoder */
+	type_compare_f     *compare;      /* Comparison between 2 instances */
 
 	/***********************************************************************
 	 * Internally useful members. Not to be used by applications directly. *

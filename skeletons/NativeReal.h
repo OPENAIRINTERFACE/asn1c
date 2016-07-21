@@ -29,6 +29,7 @@ per_type_decoder_f NativeReal_decode_uper;
 per_type_encoder_f NativeReal_encode_uper;
 per_type_decoder_f NativeReal_decode_aper;
 per_type_encoder_f NativeReal_encode_aper;
+type_compare_f     NativeReal_compare;
 
 #ifdef __cplusplus
 }

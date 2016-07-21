@@ -1082,6 +1082,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	enum tvm_compat tv_mode;
 	enum etd_spec etd_spec;
 	char *p;
+  //char tmp_buf[512];
+  //int i = 0;
 
 	if(arg->embed) {
 		enum tnfmt tnfmt = TNF_CTYPE;
@@ -1243,7 +1245,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("td->uper_decoder   = asn_DEF_%s.uper_decoder;\n",   type_name);
 	OUT("td->uper_encoder   = asn_DEF_%s.uper_encoder;\n",   type_name);
 	OUT("td->aper_decoder   = asn_DEF_%s.aper_decoder;\n",   type_name);
-	OUT("td->aper_encoder   = asn_DEF_%s.aper_encoder;\n",   type_name);
+  OUT("td->aper_encoder   = asn_DEF_%s.aper_encoder;\n",   type_name);
+  OUT("td->compare        = asn_DEF_%s.compare;\n",        type_name);
 	if(!terminal && !tags_count) {
 	  OUT("/* The next four lines are here because of -fknown-extern-type */\n");
 	  OUT("td->tags           = asn_DEF_%s.tags;\n",         type_name);
@@ -1413,6 +1416,39 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	OUT("}\n");
 	OUT("\n");
 
+
+  //i = 0;
+  //while ((p[i] != '_') && (i < sizeof(tmp_buf))) {
+  //  tmp_buf[i] = p[i];
+  //  i++;
+  //}
+  //tmp_buf[i] = '\0';
+  // hack, only for s1ap
+  //if ((strcmp("S1ap", tmp_buf) == 0) || (strcmp("X2ap", tmp_buf) == 0))
+  //  OUT("#include \"%s-ProtocolIE-ID.h\"\n", tmp_buf);
+
+
+  p = MKID(expr);
+  if(HIDE_INNER_DEFS) OUT("static ");
+              OUT("asn_comp_rval_t * \n");
+  OUT("%s", p);
+  if(HIDE_INNER_DEFS) OUT("_%d", expr->_type_unique_index);
+    OUT("_compare(asn_TYPE_descriptor_t *td1,\n");
+  INDENTED(
+  OUT("\tconst void *structure1,\n");
+  OUT("\tasn_TYPE_descriptor_t *td2,\n");
+  OUT("\tconst void *structure2) {\n");
+  OUT("asn_comp_rval_t * res  = NULL;\n");
+  OUT("%s_%d_inherit_TYPE_descriptor(td1);\n",
+    p, expr->_type_unique_index);
+  OUT("%s_%d_inherit_TYPE_descriptor(td2);\n",
+    p, expr->_type_unique_index);
+  OUT("res = td1->compare(td1, structure1, td2, structure2);\n");
+  OUT("return res;\n");
+  );
+  OUT("}\n");
+  OUT("\n");
+
 	p = MKID(expr);
 	
 	if(HIDE_INNER_DEFS) OUT("static ");
@@ -1450,7 +1486,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		OUT("per_type_decoder_f %s_decode_uper;\n", p);
 		OUT("per_type_encoder_f %s_encode_uper;\n", p);
 		OUT("per_type_decoder_f %s_decode_aper;\n", p);
-		OUT("per_type_encoder_f %s_encode_aper;\n", p);
+    OUT("per_type_encoder_f %s_encode_aper;\n", p);
+    OUT("type_compare_f     %s_compare;\n", p);
 		}
 	}
 
@@ -2501,6 +2538,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 			OUT("0, 0,\t/* No APER support, "
 				"use \"-gen-PER\" to enable */\n");
 		}
+    FUNCREF(compare);
 
 		if(!terminal || terminal->expr_type == ASN_CONSTR_CHOICE) {
 		//if(expr->expr_type == ASN_CONSTR_CHOICE) {

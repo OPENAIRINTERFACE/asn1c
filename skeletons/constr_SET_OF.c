@@ -1039,3 +1039,54 @@ SET_OF_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	rv.consumed = 0;
 	return rv;
 }
+
+asn_comp_rval_t *
+SET_OF_compare(asn_TYPE_descriptor_t *td1, const void *sptr1, asn_TYPE_descriptor_t *td2, const void *sptr2)
+{
+  asn_TYPE_member_t *elm1 = td1->elements;
+  asn_TYPE_member_t *elm2 = td2->elements;
+  const asn_anonymous_set_ *list1 = _A_CSET_FROM_VOID(sptr1);
+  const asn_anonymous_set_ *list2 = _A_CSET_FROM_VOID(sptr2);
+  int i;
+  asn_comp_rval_t *res = NULL;
+  asn_comp_rval_t *res2 = NULL;
+
+  COMPARE_CHECK_ARGS(td1, td2, sptr1, sptr2, res)
+
+  if (td1->elements_count != td2->elements_count) {
+    res = calloc(1, sizeof(asn_comp_rval_t));
+    res->name = td1->name;
+    res->structure1 = sptr1;
+    res->structure2 = sptr2;
+    res->err_code = COMPARE_ERR_CODE_COLLECTION_NUM_ELEMENTS;
+    return res;
+  }
+
+
+  if (list1->count != list2->count ) {
+    res = calloc(1, sizeof(asn_comp_rval_t));
+    res->name = td1->name;
+    res->structure1 = sptr1;
+    res->structure2 = sptr2;
+    res->err_code = COMPARE_ERR_CODE_COLLECTION_NUM_ELEMENTS;
+    return res;
+  }
+
+  for(i = 0; i < list1->count; i++) {
+    const void *memb_ptr1 = list1->array[i];
+    const void *memb_ptr2 = list2->array[i];
+    if ((!memb_ptr1) & (!memb_ptr2)) continue;
+
+    res2 = elm1->type->compare(elm1->type, memb_ptr1, elm2->type, memb_ptr2);
+    if(res2) {
+      if (NULL == res) {
+        res = res2;
+      } else {
+        res2->next = res;
+        res = res2;
+      }
+      res2 = NULL;
+    }
+  }
+  return  res;
+}

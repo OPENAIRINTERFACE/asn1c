@@ -39,7 +39,7 @@ typedef struct asn_CHOICE_specifics_s {
 /*
  * A set specialized functions dealing with the CHOICE type.
  */
-asn_struct_free_f CHOICE_free;
+asn_struct_free_f  CHOICE_free;
 asn_struct_print_f CHOICE_print;
 asn_constr_check_f CHOICE_constraint;
 ber_type_decoder_f CHOICE_decode_ber;
@@ -50,7 +50,8 @@ per_type_decoder_f CHOICE_decode_uper;
 per_type_encoder_f CHOICE_encode_uper;
 per_type_decoder_f CHOICE_decode_aper;
 per_type_encoder_f CHOICE_encode_aper;
-asn_outmost_tag_f CHOICE_outmost_tag;
+type_compare_f     CHOICE_compare;
+asn_outmost_tag_f  CHOICE_outmost_tag;
 
 #ifdef __cplusplus
 }

@@ -34,6 +34,7 @@ per_type_decoder_f OCTET_STRING_decode_uper;
 per_type_encoder_f OCTET_STRING_encode_uper;
 per_type_decoder_f OCTET_STRING_decode_aper;
 per_type_encoder_f OCTET_STRING_encode_aper;
+type_compare_f     OCTET_STRING_compare;
 
 /******************************
  * Handy conversion routines. *

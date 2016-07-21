@@ -32,7 +32,8 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	NativeInteger_decode_uper,	/* Unaligned PER decoder */
 	NativeInteger_encode_uper,	/* Unaligned PER encoder */
 	NativeInteger_decode_aper,	/* Aligned PER decoder */
-	NativeInteger_encode_aper,	/* Aligned PER encoder */
+  NativeInteger_encode_aper,  /* Aligned PER encoder */
+  NativeInteger_compare,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeInteger_tags,
 	sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
@@ -410,3 +411,21 @@ NativeInteger_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	}
 }
 
+
+asn_comp_rval_t *
+NativeInteger_compare(asn_TYPE_descriptor_t *td1, const void *sptr1,
+                      asn_TYPE_descriptor_t *td2, const void *sptr2) {
+  const long *native1 = (const long *)sptr1;
+  const long *native2 = (const long *)sptr2;
+  asn_comp_rval_t *res = NULL;
+
+  COMPARE_CHECK_ARGS(td1, td2, sptr1, sptr2, res)
+
+  if (*native1 == *native2) return NULL;
+  res = calloc(1, sizeof(asn_comp_rval_t));
+  res->name = td1->name;
+  res->structure1 = sptr1;
+  res->structure2 = sptr2;
+  res->err_code = COMPARE_ERR_CODE_NO_MATCH;
+  return res;
+}

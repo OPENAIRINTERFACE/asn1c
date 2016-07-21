@@ -1761,3 +1761,65 @@ SEQUENCE_encode_aper(asn_TYPE_descriptor_t *td,
 
 	_ASN_ENCODED_OK(er);
 }
+
+asn_comp_rval_t * SEQUENCE_compare(asn_TYPE_descriptor_t *td1, const void *sptr1, asn_TYPE_descriptor_t *td2, const void *sptr2) {
+  int edx;
+  asn_comp_rval_t *res = NULL;
+  asn_comp_rval_t *res2 = NULL;
+
+  COMPARE_CHECK_ARGS(td1, td2, sptr1, sptr2, res)
+
+  if (td1->elements_count != td2->elements_count) {
+    res = calloc(1, sizeof(asn_comp_rval_t));
+    res->name = td1->name;
+    res->structure1 = sptr1;
+    res->structure2 = sptr2;
+    res->err_code = COMPARE_ERR_CODE_COLLECTION_NUM_ELEMENTS;
+    return res;
+  }
+
+  for(edx = 0; edx < td1->elements_count; edx++) {
+    asn_TYPE_member_t *elm1 = &td1->elements[edx];
+    asn_TYPE_member_t *elm2 = &td1->elements[edx];
+    const void *memb_ptr1;
+    const void *memb_ptr2;
+
+    if(elm1->flags & ATF_POINTER) {
+      memb_ptr1 = *(const void * const *)((const char *)sptr1 + elm1->memb_offset);
+      memb_ptr2 = *(const void * const *)((const char *)sptr2 + elm2->memb_offset);
+      if((!memb_ptr1) && (!memb_ptr2)) {
+        if(elm1->optional) continue;
+      }
+      if ((!memb_ptr1) || (!memb_ptr2)) {
+        res2 = calloc(1, sizeof(asn_comp_rval_t));
+        res2->name = elm1->name;
+        res2->structure1 = memb_ptr1;
+        res2->structure2 = memb_ptr2;
+        res->err_code = COMPARE_ERR_CODE_VALUE_NULL;
+        if (NULL == res) {
+          res = res2;
+        } else {
+          res2->next = res;
+          res = res2;
+        }
+        res2 = NULL;
+      }
+    } else {
+      memb_ptr1 = (const void *)((const char *)sptr1 + elm1->memb_offset);
+      memb_ptr2 = (const void *)((const char *)sptr2 + elm2->memb_offset);
+    }
+
+    /* Compare the member itself */
+    res2 = elm1->type->compare(elm1->type, memb_ptr1, elm2->type, memb_ptr2);
+    if(res2) {
+      if (NULL == res) {
+        res = res2;
+      } else {
+        res2->next = res;
+        res = res2;
+      }
+      res2 = NULL;
+    }
+  }
+  return res;
+}

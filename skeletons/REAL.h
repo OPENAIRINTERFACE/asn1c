@@ -23,6 +23,7 @@ per_type_decoder_f REAL_decode_uper;
 per_type_encoder_f REAL_encode_uper;
 per_type_decoder_f REAL_decode_aper;
 per_type_encoder_f REAL_encode_aper;
+type_compare_f     REAL_compare;
 
 /***********************************
  * Some handy conversion routines. *

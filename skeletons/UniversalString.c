@@ -36,7 +36,8 @@ asn_TYPE_descriptor_t asn_DEF_UniversalString = {
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
 	OCTET_STRING_decode_aper,
-	OCTET_STRING_encode_aper,
+  OCTET_STRING_encode_aper,
+  OCTET_STRING_compare,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_UniversalString_tags,
 	sizeof(asn_DEF_UniversalString_tags)

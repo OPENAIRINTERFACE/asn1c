@@ -46,11 +46,11 @@ libasn1cskeletons_la_SOURCES = 				\
 	asn_SET_OF.c asn_SET_OF.h			\
 	asn_application.h asn_codecs.h			\
 	asn_codecs_prim.c asn_codecs_prim.h		\
-	asn_internal.h asn_system.h			\
+	asn_internal.h asn_system.h asn_compare.h			\
 	ber_decoder.c ber_decoder.h			\
 	ber_tlv_length.c ber_tlv_length.h		\
-	ber_tlv_tag.c ber_tlv_tag.h			\
-	constr_CHOICE.c constr_CHOICE.h			\
+	ber_tlv_tag.c ber_tlv_tag.h compare.h			\
+	comparison.h constr_CHOICE.c constr_CHOICE.h			\
 	constr_SEQUENCE.c constr_SEQUENCE.h		\
 	constr_SEQUENCE_OF.c constr_SEQUENCE_OF.h	\
 	constr_SET.c constr_SET.h			\

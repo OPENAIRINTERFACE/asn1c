@@ -56,6 +56,7 @@ per_type_decoder_f SET_decode_uper;
 per_type_decoder_f SET_decode_aper;
 per_type_encoder_f SET_encode_uper;
 per_type_encoder_f SET_encode_aper;
+type_compare_f     SET_compare;
 
 /***********************
  * Some handy helpers. *

@@ -9,7 +9,8 @@
 #define	_ASN_APPLICATION_H_
 
 #include "asn_system.h"		/* for platform-dependent types */
-#include "asn_codecs.h"		/* for ASN.1 codecs specifics */
+#include "asn_codecs.h"   /* for ASN.1 codecs specifics */
+#include "asn_compare.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -35,6 +35,7 @@ asn_TYPE_descriptor_t asn_DEF_INTEGER = {
 	INTEGER_decode_aper,
 	INTEGER_encode_aper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
+	INTEGER_compare,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_INTEGER_tags,
 	sizeof(asn_DEF_INTEGER_tags) / sizeof(asn_DEF_INTEGER_tags[0]),
@@ -1501,3 +1502,30 @@ asn_int642INTEGER(INTEGER_t *st, int64_t value) {
 }
 
 
+asn_comp_rval_t *
+INTEGER_compare(asn_TYPE_descriptor_t *td1, const void *sptr1,
+                asn_TYPE_descriptor_t *td2, const void *sptr2) {
+  const INTEGER_t *st1 = (const INTEGER_t *)sptr1;
+  const INTEGER_t *st2 = (const INTEGER_t *)sptr2;
+  asn_comp_rval_t *res = NULL;
+
+  COMPARE_CHECK_ARGS(td1, td2, sptr1, sptr2, res)
+
+  if (st1->size != st2->size) {
+    res = calloc(1, sizeof(asn_comp_rval_t));
+    res->name = td1->name;
+    res->structure1 = sptr1;
+    res->structure2 = sptr2;
+    res->err_code = COMPARE_ERR_CODE_NO_MATCH;
+    return res;
+  }
+  if (0 != memcmp(st1->buf, st2->buf, st1->size)) {
+    res = calloc(1, sizeof(asn_comp_rval_t));
+    res->name = td1->name;
+    res->structure1 = sptr1;
+    res->structure2 = sptr2;
+    res->err_code = COMPARE_ERR_CODE_NO_MATCH;
+    return res;
+  }
+  return NULL;
+}

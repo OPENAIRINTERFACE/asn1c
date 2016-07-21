@@ -36,6 +36,7 @@ per_type_decoder_f SET_OF_decode_uper;
 per_type_encoder_f SET_OF_encode_uper;
 per_type_decoder_f SET_OF_decode_aper;
 per_type_encoder_f SET_OF_encode_aper;
+type_compare_f     SET_OF_compare;
 
 #ifdef __cplusplus
 }

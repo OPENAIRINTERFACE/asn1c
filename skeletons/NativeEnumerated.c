@@ -31,7 +31,8 @@ asn_TYPE_descriptor_t asn_DEF_NativeEnumerated = {
 	NativeEnumerated_decode_uper,
 	NativeEnumerated_encode_uper,
 	NativeEnumerated_decode_aper,
-	NativeEnumerated_encode_aper,
+  NativeEnumerated_encode_aper,
+  NativeEnumerated_compare,
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeEnumerated_tags,
 	sizeof(asn_DEF_NativeEnumerated_tags) / sizeof(asn_DEF_NativeEnumerated_tags[0]),
@@ -334,4 +335,23 @@ NativeEnumerated_encode_aper(asn_TYPE_descriptor_t *td,
 		_ASN_ENCODE_FAILED;
 
 	_ASN_ENCODED_OK(er);
+}
+
+asn_comp_rval_t *
+NativeEnumerated_compare(asn_TYPE_descriptor_t *td1, const void *sptr1,
+    asn_TYPE_descriptor_t *td2, const void *sptr2) {
+  const asn_INTEGER_enum_map_t *a = sptr1;
+  const asn_INTEGER_enum_map_t *b = sptr2;
+  asn_comp_rval_t *res = NULL;
+
+  COMPARE_CHECK_ARGS(td1, td2, sptr1, sptr2, res)
+
+  if(a->nat_value == b->nat_value)
+    return NULL;
+  res = calloc(1, sizeof(asn_comp_rval_t));
+  res->name = td1->name;
+  res->structure1 = sptr1;
+  res->structure2 = sptr2;
+  res->err_code = COMPARE_ERR_CODE_NO_MATCH;
+  return res;
 }

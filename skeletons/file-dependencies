@@ -39,12 +39,13 @@ constr_CHOICE.h constr_CHOICE.c
 constr_SEQUENCE.h constr_SEQUENCE.c
 constr_SEQUENCE_OF.h constr_SEQUENCE_OF.c asn_SEQUENCE_OF.h constr_SET_OF.h
 constr_SET.h constr_SET.c
-constr_SET_OF.h constr_SET_OF.c asn_SET_OF.h
+constr_SET_OF.h constr_SET_OF.c asn_SET_OF.h compare.h
 
 COMMON-FILES:			# THIS IS A SPECIAL SECTION
-asn_application.h		# Applications should include this file
+asn_application.h   # Applications should include this file
 asn_system.h			# Platform-dependent types
-asn_codecs.h			# Return types of encoders and decoders
+asn_codecs.h      # Return types of encoders and decoders
+asn_compare.h     # Return type of compare
 asn_internal.h			# Internal stuff
 OCTET_STRING.h OCTET_STRING.c	# This one is used too widely
 BIT_STRING.h BIT_STRING.c	# This one is necessary for the above one

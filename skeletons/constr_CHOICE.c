@@ -1272,3 +1272,75 @@ _set_present_idx(void *struct_ptr, int pres_offset, int pres_size, int present) 
 		assert(pres_size != sizeof(int));
 	}
 }
+
+asn_comp_rval_t *
+CHOICE_compare(asn_TYPE_descriptor_t *td1, const void *sptr1, asn_TYPE_descriptor_t *td2, const void *sptr2)
+{
+  asn_CHOICE_specifics_t *specs1 = (asn_CHOICE_specifics_t *)td1->specifics;
+  asn_CHOICE_specifics_t *specs2 = (asn_CHOICE_specifics_t *)td2->specifics;
+  int present1;
+  int present2;
+  asn_comp_rval_t *res = NULL;
+
+  COMPARE_CHECK_ARGS(td1, td2, sptr1, sptr2, res)
+
+  /*
+   * Figure out which CHOICE element is encoded.
+   */
+  present1 = _fetch_present_idx(sptr1, specs1->pres_offset,specs1->pres_size);
+  // same specs
+  present2 = _fetch_present_idx(sptr2, specs2->pres_offset,specs2->pres_size);
+
+  if (td1->elements_count != td2->elements_count) {
+    res = calloc(1, sizeof(asn_comp_rval_t));
+    res->name = td1->name;
+    res->structure1 = sptr1;
+    res->structure2 = sptr2;
+    res->err_code = COMPARE_ERR_CODE_CHOICE_NUM;
+    return res;
+  }
+  if (present1 != present2) {
+    res = calloc(1, sizeof(asn_comp_rval_t));
+    res->name = td1->name;
+    res->structure1 = sptr1;
+    res->structure2 = sptr2;
+    res->err_code = COMPARE_ERR_CODE_CHOICE_PRESENT;
+    return res;
+  }
+  if(present1 > 0 && present1 <= td1->elements_count) {
+    asn_TYPE_member_t *elm1 = &td1->elements[present1-1];
+    asn_TYPE_member_t *elm2 = &td2->elements[present2-1];
+    const void *memb_ptr1;
+    const void *memb_ptr2;
+
+    if((elm1->flags & ATF_POINTER) && (elm1->flags & ATF_POINTER)){
+      memb_ptr1 = *(const void * const *)((const char *)sptr1 + elm1->memb_offset);
+      memb_ptr2 = *(const void * const *)((const char *)sptr2 + elm2->memb_offset);
+      if((!memb_ptr1) || (!memb_ptr2)) {
+        res = calloc(1, sizeof(asn_comp_rval_t));
+        res->name = td1->name;
+        res->structure1 = sptr1;
+        res->structure2 = sptr2;
+        res->err_code = COMPARE_ERR_CODE_VALUE_NULL;
+        return res;
+      }
+    } else if (!(elm1->flags & ATF_POINTER) && !(elm1->flags & ATF_POINTER)){
+      memb_ptr1 = (const void *)((const char *)sptr1 + elm1->memb_offset);
+      memb_ptr2 = (const void *)((const char *)sptr2 + elm2->memb_offset);
+    } else {
+      res = calloc(1, sizeof(asn_comp_rval_t));
+      res->name = td1->name;
+      res->structure1 = sptr1;
+      res->structure2 = sptr2;
+      res->err_code = COMPARE_ERR_CODE_CHOICE_MALFORMED;
+      return res;
+    }
+    return elm1->type->compare(elm1->type, memb_ptr1, elm2->type, memb_ptr2);
+  }
+  res = calloc(1, sizeof(asn_comp_rval_t));
+  res->name = td1->name;
+  res->structure1 = sptr1;
+  res->structure2 = sptr2;
+  res->err_code = COMPARE_ERR_CODE_CHOICE_MALFORMED;
+  return res;
+}

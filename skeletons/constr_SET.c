@@ -1108,7 +1108,7 @@ SET_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 	}
 }
 
-int
+long
 SET_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	int edx;
@@ -1158,4 +1158,59 @@ SET_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 
 	return 0;
+}
+
+asn_comp_rval_t *
+SET_compare(asn_TYPE_descriptor_t *td1, const void *sptr1, asn_TYPE_descriptor_t *td2, const void *sptr2)
+{
+  int edx;
+  asn_comp_rval_t *res = NULL;
+  asn_comp_rval_t *res2 = NULL;
+
+  COMPARE_CHECK_ARGS(td1, td2, sptr1, sptr2, res)
+
+  if (td1->elements_count != td2->elements_count) {
+    res = calloc(1, sizeof(asn_comp_rval_t));
+    res->name = td1->name;
+    res->structure1 = sptr1;
+    res->structure2 = sptr2;
+    res->err_code = COMPARE_ERR_CODE_COLLECTION_NUM_ELEMENTS;
+    return res;
+  }
+
+  for(edx = 0; edx < td1->elements_count; edx++) {
+    asn_TYPE_member_t *elm1 = &td1->elements[edx];
+    asn_TYPE_member_t *elm2 = &td2->elements[edx];
+    const void *memb_ptr1;
+    const void *memb_ptr2;
+
+    if(elm1->flags & ATF_POINTER) {
+      memb_ptr1 = *(const void * const *)((const char *)sptr1 + elm1->memb_offset);
+      memb_ptr2 = *(const void * const *)((const char *)sptr2 + elm2->memb_offset);
+      if(!memb_ptr1) {
+        if(elm1->optional)
+          continue;
+        res = calloc(1, sizeof(asn_comp_rval_t));
+        res->name = td1->name;
+        res->structure1 = sptr1;
+        res->structure2 = sptr2;
+        res->err_code = COMPARE_ERR_CODE_SET_MALFORMED;
+        return res;
+      }
+    } else {
+      memb_ptr1 = (const void *)((const char *)sptr1 + elm1->memb_offset);
+      memb_ptr2 = (const void *)((const char *)sptr2 + elm2->memb_offset);
+    }
+    res2 = elm1->type->compare(elm1->type, memb_ptr1, elm2->type, memb_ptr2);
+    if(res2) {
+      if (NULL == res) {
+        res = res2;
+      } else {
+        res2->next = res;
+        res = res2;
+      }
+      res2 = NULL;
+    }
+  }
+  return res;
 }
