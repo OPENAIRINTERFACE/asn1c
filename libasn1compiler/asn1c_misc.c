@@ -158,6 +158,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 	asn1p_expr_t *terminal;
 	int stdname = 0;
 	char *typename;
+	enum asn1c_fitslong_e fits;
 
 	/* Rewind to the topmost parent expression */
 	if((top_parent = expr->parent_expr))
@@ -213,15 +214,20 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
 	case ASN_BASIC_REAL:
+		fits = asn1c_type_fits_long(arg, expr);
 		if((expr->expr_type == ASN_BASIC_REAL
 			&& !(arg->flags & A1C_USE_WIDE_TYPES))
-		|| asn1c_type_fits_long(arg, expr)) {
+			|| (fits != FL_NOTFIT)) {
 			switch(_format) {
 			case TNF_CTYPE:
 			case TNF_RSAFE:
 				if(expr->expr_type == ASN_BASIC_REAL)
 					return "double";
-				else if(asn1c_type_fits_long(arg, expr) == FL_FITS_UNSIGN)
+				else if (fits == FL_FITS_INT64)
+					return "int64_t";
+				else if (fits == FL_FITS_UINT64)
+					return "uint64_t";
+				else if(fits == FL_FITS_UNSIGN)
 					return "unsigned long";
 				else
 					return "long";
@@ -377,11 +383,33 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
 	/* Special case for unsigned */
 	if(left.type == ARE_VALUE
 		&& left.value >= 0
-	&& right.type == ARE_VALUE
+		&& right.type == ARE_VALUE
 		&& right.value > 2147483647
 		&& right.value <= 4294967295UL)
 		return FL_FITS_UNSIGN;
-		
+	/* Special for native 64 bits integer option */
+	if (arg->flags & A1C_HAVE_NATIVE_64) {
+// 		printf("left.value %lld right.value %lld\n", left.value, right.value);
+		if(left.type == ARE_VALUE
+			&& left.value >= 0
+			&& right.type == ARE_VALUE
+			&& right.value > 9223372036854775807LL
+			&& right.value <= 18446744073709551615ULL)
+			return FL_FITS_UINT64;
+		if(left.type == ARE_VALUE
+			&& left.value < -2147483648
+			&& left.value >= -9223372036854775808LL
+			&& right.type == ARE_VALUE
+			&& right.value > 2147483647
+			&& right.value <= 9223372036854775807LL)
+			return FL_FITS_INT64;
+		if(left.type == ARE_VALUE
+			&& left.value >= 0
+			&& right.type == ARE_VALUE
+			&& right.value > 4294967295UL
+			&& right.value <= 9223372036854775807LL)
+			return FL_FITS_INT64;
+	}
 
 	/* If some fixed value is outside of target range, not fit */
 	if(left.type == ARE_VALUE

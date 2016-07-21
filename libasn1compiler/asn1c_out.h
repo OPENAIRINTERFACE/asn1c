@@ -117,16 +117,24 @@ int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
  * Format LONG_MIN according to C90 rules.
  */
 #define OINT(iv)	do {					\
-	if(iv == (-2147483647L - 1))				\
+	if(iv > 4294967295U)						\
+		OUT("%" PRIdASN"ULL", iv);			\
+	else if(iv > 2147483647L)				\
+		OUT("%" PRIdASN"U", iv);				\
+	else if(iv == (-2147483647L - 1))		\
 		OUT("(-2147483647L - 1)");			\
-	else							\
+	else									\
 		OUT("%" PRIdASN, iv);				\
 } while(0)
 
 #define OINTS(iv)	do {					\
-	if(iv == (-2147483647L - 1))				\
+	if(iv > 4294967295U)						\
+		OUT("%" PRIdASN"ULL", iv);			\
+	else if(iv > 2147483647L)				\
+		OUT("%" PRIdASN"U", iv);				\
+	else if(iv == (-2147483647L - 1))		\
 		OUT("(-2147483647L - 1)");			\
-	else							\
+	else									\
 		OUT("% " PRIdASN, iv);				\
 } while(0)
 

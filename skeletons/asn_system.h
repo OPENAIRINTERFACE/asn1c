@@ -21,6 +21,11 @@
 #include <stdarg.h>	/* For va_start */
 #include <stddef.h>	/* for offsetof and ptrdiff_t */
 
+#if HAVE_STDINT_H
+# include <stdint.h>
+# include <inttypes.h>
+#endif
+
 #ifdef	_WIN32
 
 #include <malloc.h>

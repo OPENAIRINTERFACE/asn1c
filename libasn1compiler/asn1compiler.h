@@ -77,7 +77,14 @@ enum asn1c_flags {
 	 * -fline-refs
 	 * Include ASN.1 module's line numbers in comments.
 	 */
-	A1C_LINE_REFS       = 0x20000
+	A1C_LINE_REFS       = 0x20000,
+ 	/*
+	 * -fhave_native64
+	 * Assume target platform has native 64bits support and generate types using
+	 * int64_t or uint64_t whereas possible
+	 */
+	A1C_HAVE_NATIVE_64	= 0x40000
+
 };
 
 /*

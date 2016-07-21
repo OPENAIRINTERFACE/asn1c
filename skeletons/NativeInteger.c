@@ -31,6 +31,8 @@ asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
 	NativeInteger_encode_xer,
 	NativeInteger_decode_uper,	/* Unaligned PER decoder */
 	NativeInteger_encode_uper,	/* Unaligned PER encoder */
+	NativeInteger_decode_aper,	/* Aligned PER decoder */
+	NativeInteger_encode_aper,	/* Aligned PER encoder */
 	0, /* Use generic outmost tag fetcher */
 	asn_DEF_NativeInteger_tags,
 	sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
@@ -267,6 +269,46 @@ NativeInteger_decode_uper(asn_codec_ctx_t *opt_codec_ctx,
 	return rval;
 }
 
+asn_dec_rval_t
+NativeInteger_decode_aper(asn_codec_ctx_t *opt_codec_ctx,
+	asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+
+	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
+	asn_dec_rval_t rval;
+	long *native = (long *)*sptr;
+	INTEGER_t tmpint;
+	void *tmpintptr = &tmpint;
+	int dynamic = 0;
+
+	(void)opt_codec_ctx;
+	ASN_DEBUG("Decoding NativeInteger %s (APER)", td->name);
+
+	if(!native) {
+		native = (long *)(*sptr = CALLOC(1, sizeof(*native)));
+		dynamic = 1;
+		if(!native) _ASN_DECODE_FAILED;
+	}
+
+	memset(&tmpint, 0, sizeof tmpint);
+	rval = INTEGER_decode_aper(opt_codec_ctx, td, constraints,
+				   &tmpintptr, pd);
+	if(rval.code == RC_OK) {
+		if((specs&&specs->field_unsigned)
+			? asn_INTEGER2ulong(&tmpint, (unsigned long *)native)
+			: asn_INTEGER2long(&tmpint, native))
+			rval.code = RC_FAIL;
+		else
+			ASN_DEBUG("NativeInteger %s got value %ld",
+				td->name, *native);
+	}
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
+	//if (dynamic)
+	//	free(native);
+
+	return rval;
+}
+
 asn_enc_rval_t
 NativeInteger_encode_uper(asn_TYPE_descriptor_t *td,
 	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
@@ -287,6 +329,44 @@ NativeInteger_encode_uper(asn_TYPE_descriptor_t *td,
 		: asn_long2INTEGER(&tmpint, native))
 		_ASN_ENCODE_FAILED;
 	er = INTEGER_encode_uper(td, constraints, &tmpint, po);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
+	return er;
+}
+
+asn_enc_rval_t
+NativeInteger_encode_aper(
+	asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void *sptr, asn_per_outp_t *po) {
+
+	asn_INTEGER_specifics_t *specs=(asn_INTEGER_specifics_t *)td->specifics;
+	asn_enc_rval_t er;
+	INTEGER_t tmpint;
+
+	if(!sptr) _ASN_ENCODE_FAILED;
+	memset(&tmpint, 0, sizeof(tmpint));
+
+	if(specs&&specs->field_unsigned) {
+		unsigned long native;
+		native = *(unsigned long *)sptr;
+
+		ASN_DEBUG("Encoding NativeInteger %s %lu (APER) (unsigned)", td->name, native);
+
+		if(asn_ulong2INTEGER(&tmpint, native))
+			_ASN_ENCODE_FAILED;
+	} else {
+		long native;
+		native = *(long *)sptr;
+
+		ASN_DEBUG("Encoding NativeInteger %s %ld (APER) (unsigned)", td->name, native);
+		if(asn_long2INTEGER(&tmpint, native))
+			_ASN_ENCODE_FAILED;
+	}
+
+// 	if((specs&&specs->field_unsigned)
+// 		? asn_ulong2INTEGER(&tmpint, native)
+// 		: asn_long2INTEGER(&tmpint, native))
+// 		_ASN_ENCODE_FAILED;
+	er = INTEGER_encode_aper(td, constraints, &tmpint, po);
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
 	return er;
 }

@@ -111,6 +111,8 @@ main(int ac, char **av) {
 			asn1_compiler_flags &= ~A1C_LINK_SKELETONS;
 		} else if(strcmp(optarg, "link-skeletons") == 0) {
 			asn1_compiler_flags |= A1C_LINK_SKELETONS;
+		} else if(strcmp(optarg, "have_native64") == 0) {
+			asn1_compiler_flags |= A1C_HAVE_NATIVE_64;
 		} else {
 			fprintf(stderr, "-f%s: Invalid argument\n", optarg);
 			exit(EX_USAGE);
@@ -471,6 +473,7 @@ usage(const char *av0) {
 "  -fno-include-deps     Do not generate courtesy #includes for dependencies\n"
 "  -funnamed-unions      Enable unnamed unions in structures\n"
 "  -fwide-types          Use INTEGER_t instead of \"long\" by default, etc.\n"
+"  -fhave_native64       Use int64_t/uint64_t for target platform\n"
 "\n"
 
 "  -gen-PER              Generate PER support code\n"

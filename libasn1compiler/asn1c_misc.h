@@ -36,6 +36,8 @@ char *asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format);
  */
 enum asn1c_fitslong_e {
 	FL_NOTFIT,
+	FL_FITS_INT64,
+	FL_FITS_UINT64,
 	FL_FITS_SIGNED,
 	FL_FITS_UNSIGN,
 	FL_PRESUMED,

@@ -34,7 +34,7 @@
 #undef	ADVANCE
 #define	ADVANCE(num_bytes)	do {		\
 		size_t num = num_bytes;		\
-		ptr = ((const void *)ptr) + num;\
+		ptr = ((const char *)ptr) + num;\
 		size -= num;			\
 		if(ctx->left >= 0)		\
 			ctx->left -= num;	\
@@ -100,7 +100,7 @@ SET_OF_decode_ber(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	/*
 	 * Restore parsing context.
 	 */
-	ctx = (asn_struct_ctx_t *)((void *)st + specs->ctx_offset);
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
 	
 	/*
 	 * Start to parse where left previously
@@ -457,7 +457,7 @@ SET_OF_encode_der(asn_TYPE_descriptor_t *td, void *ptr,
 #undef	XER_ADVANCE
 #define	XER_ADVANCE(num_bytes)	do {			\
 		size_t num = num_bytes;			\
-		buf_ptr = ((const void *)buf_ptr) + num;\
+		buf_ptr = ((const char *)buf_ptr) + num;\
 		size -= num;				\
 		consumed_myself += num;			\
 	} while(0)
@@ -505,7 +505,7 @@ SET_OF_decode_xer(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	/*
 	 * Restore parsing context.
 	 */
-	ctx = (asn_struct_ctx_t *)((void *)st + specs->ctx_offset);
+	ctx = (asn_struct_ctx_t *)((char *)st + specs->ctx_offset);
 
 	/*
 	 * Phases of XER/XML processing:
@@ -627,7 +627,7 @@ SET_OF_encode_xer_callback(const void *buffer, size_t size, void *key) {
 		t->buffer = p;
 		t->size = newsize;
 	}
-	memcpy((void *)t->buffer + t->offset, buffer, size);
+	memcpy((char *)t->buffer + t->offset, buffer, size);
 	t->offset += size;
 	return 0;
 }
@@ -809,7 +809,7 @@ SET_OF_free(asn_TYPE_descriptor_t *td, void *ptr, int contents_only) {
 		asn_set_empty(list);	/* Remove (list->array) */
 
 		specs = (asn_SET_OF_specifics_t *)td->specifics;
-		ctx = (asn_struct_ctx_t *)((void *)ptr + specs->ctx_offset);
+		ctx = (asn_struct_ctx_t *)((char *)ptr + specs->ctx_offset);
 		if(ctx->ptr) {
 			ASN_STRUCT_FREE(*elm->type, ctx->ptr);
 			ctx->ptr = 0;
@@ -884,7 +884,7 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	if(!st) {
 		st = *sptr = CALLOC(1, specs->struct_size);
 		if(!st) _ASN_DECODE_FAILED;
-	}                                                                       
+	}
 	list = _A_SET_FROM_VOID(st);
 
 	/* Figure out which constraints to use */
@@ -901,7 +901,7 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	if(ct && ct->effective_bits >= 0) {
 		/* X.691, #19.5: No length determinant */
 		nelems = per_get_few_bits(pd, ct->effective_bits);
-		ASN_DEBUG("Preparing to fetch %ld+%ld elements from %s",
+		ASN_DEBUG("Preparing to fetch %ld+%"PRIdMAX" elements from %s",
 			(long)nelems, ct->lower_bound, td->name);
 		if(nelems < 0)  _ASN_DECODE_STARVED;
 		nelems += ct->lower_bound;
@@ -951,3 +951,91 @@ SET_OF_decode_uper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 	return rv;
 }
 
+asn_dec_rval_t
+SET_OF_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
+				   asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+	asn_dec_rval_t rv;
+	asn_SET_OF_specifics_t *specs = (asn_SET_OF_specifics_t *)td->specifics;
+	asn_TYPE_member_t *elm = td->elements;	/* Single one */
+	void *st = *sptr;
+	asn_anonymous_set_ *list;
+	asn_per_constraint_t *ct;
+	int repeat = 0;
+	ssize_t nelems;
+
+	if(_ASN_STACK_OVERFLOW_CHECK(opt_codec_ctx))
+		_ASN_DECODE_FAILED;
+
+	/*
+	 * Create the target structure if it is not present already.
+	 */
+	if(!st) {
+		st = *sptr = CALLOC(1, specs->struct_size);
+		if(!st) _ASN_DECODE_FAILED;
+	}
+	list = _A_SET_FROM_VOID(st);
+
+	/* Figure out which constraints to use */
+	if(constraints) ct = &constraints->size;
+	else if(td->per_constraints) ct = &td->per_constraints->size;
+	else ct = 0;
+
+	if(ct && ct->flags & APC_EXTENSIBLE) {
+		int value = per_get_few_bits(pd, 1);
+		if(value < 0) _ASN_DECODE_STARVED;
+		if(value) ct = 0;	/* Not restricted! */
+	}
+
+	if(ct && ct->effective_bits >= 0) {
+		/* X.691, #19.5: No length determinant */
+// 		nelems = per_get_few_bits(pd, ct->effective_bits);
+		nelems = aper_get_nsnnwn(pd, ct->upper_bound - ct->lower_bound);
+		ASN_DEBUG("Preparing to fetch %ld+%"PRIdMAX" elements from %s",
+			(long)nelems, ct->lower_bound, td->name);
+		if(nelems < 0)  _ASN_DECODE_STARVED;
+		nelems += ct->lower_bound;
+	} else {
+		nelems = -1;
+	}
+
+	do {
+		int i;
+		if(nelems < 0) {
+			nelems = aper_get_length(pd, ct ? ct->upper_bound - ct->lower_bound + 1 : -1,
+				ct ? ct->effective_bits : -1, &repeat);
+			ASN_DEBUG("Got to decode %d elements (eff %d)",
+				(int)nelems, (int)ct ? ct->effective_bits : -1);
+			if(nelems < 0) _ASN_DECODE_STARVED;
+		}
+
+		for(i = 0; i < nelems; i++) {
+			void *ptr = 0;
+			ASN_DEBUG("SET OF %s decoding", elm->type->name);
+			rv = elm->type->aper_decoder(opt_codec_ctx, elm->type,
+				elm->per_constraints, &ptr, pd);
+			ASN_DEBUG("%s SET OF %s decoded %d, %p",
+				td->name, elm->type->name, rv.code, ptr);
+			if(rv.code == RC_OK) {
+				if(ASN_SET_ADD(list, ptr) == 0)
+					continue;
+				ASN_DEBUG("Failed to add element into %s",
+					td->name);
+				/* Fall through */
+				rv.code = RC_FAIL;
+			} else {
+				ASN_DEBUG("Failed decoding %s of %s (SET OF)",
+					elm->type->name, td->name);
+			}
+			if(ptr) ASN_STRUCT_FREE(*elm->type, ptr);
+			return rv;
+		}
+
+		nelems = -1;	/* Allow uper_get_length() */
+	} while(repeat);
+
+	ASN_DEBUG("Decoded %s as SET OF", td->name);
+
+	rv.code = RC_OK;
+	rv.consumed = 0;
+	return rv;
+}

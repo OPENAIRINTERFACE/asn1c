@@ -35,6 +35,7 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	int alphabet_table_compiled;
 	int produce_st = 0;
 	int ulong_optimize = 0;
+	enum asn1c_fitslong_e fits = FL_NOTFIT;
 
 	ct = expr->combined_constraints;
 	if(ct == NULL)
@@ -74,7 +75,8 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 	switch(etype) {
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
-		if(asn1c_type_fits_long(arg, arg->expr) == FL_NOTFIT)
+		fits = asn1c_type_fits_long(arg, arg->expr);
+		if(fits == FL_NOTFIT)
 			produce_st = 1;
 		break;
 	case ASN_BASIC_REAL:
@@ -103,13 +105,19 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 			switch(etype) {
 			case ASN_BASIC_INTEGER:
 			case ASN_BASIC_ENUMERATED:
-				if(native_long_sign(r_value) >= 0) {
-					ulong_optimize = ulong_optimization(etype, r_size, r_value);
-					if(!ulong_optimize) {
-						OUT("unsigned long value;\n");
-					}
+				if(fits == FL_FITS_INT64) {
+					OUT("int64_t value;\n");
+				} else if(fits == FL_FITS_UINT64) {
+					OUT("uint64_t value;\n");
 				} else {
-					OUT("long value;\n");
+					if(native_long_sign(r_value) >= 0) {
+						ulong_optimize = ulong_optimization(etype, r_size, r_value);
+						if(!ulong_optimize) {
+							OUT("unsigned long value;\n");
+						}
+					} else {
+						OUT("long value;\n");
+					}
 				}
 				break;
 			case ASN_BASIC_REAL:
@@ -603,13 +611,19 @@ emit_size_determination_code(arg_t *arg, asn1p_expr_type_e etype) {
 
 static int
 emit_value_determination_code(arg_t *arg, asn1p_expr_type_e etype, asn1cnst_range_t *r_value) {
+	enum asn1c_fitslong_e fits = FL_NOTFIT;
 
 	switch(etype) {
 	case ASN_BASIC_INTEGER:
 	case ASN_BASIC_ENUMERATED:
-		if(asn1c_type_fits_long(arg, arg->expr) == FL_FITS_UNSIGN) {
+		fits = asn1c_type_fits_long(arg, arg->expr);
+		if(fits == FL_FITS_INT64) {
+			OUT("value = *(const int64_t *)sptr;\n");
+		} else if(fits == FL_FITS_UINT64) {
+			OUT("value = *(const uint64_t *)sptr;\n");
+		} else if(fits == FL_FITS_UNSIGN) {
 			OUT("value = *(const unsigned long *)sptr;\n");
-		} else if(asn1c_type_fits_long(arg, arg->expr) != FL_NOTFIT) {
+		} else if(fits != FL_NOTFIT) {
 			OUT("value = *(const long *)sptr;\n");
 		} else {
 			/*
