@@ -353,7 +353,7 @@ static struct dynamic_buffer {
 } DynamicBuffer;
 
 static void
-buffer_dump() {
+buffer_dump(void) {
 	uint8_t *p = DynamicBuffer.data + DynamicBuffer.offset;
 	uint8_t *e = p + DynamicBuffer.length - (DynamicBuffer.unbits ? 1 : 0);
 	if(!opt_debug) return;
