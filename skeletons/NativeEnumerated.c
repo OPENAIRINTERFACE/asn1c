@@ -137,7 +137,7 @@ NativeEnumerated_decode_aper(asn_codec_ctx_t *opt_codec_ctx,
 	long *native = (long *)*sptr;
 	asn_per_constraint_t *ct;
 	long value;
-	int freeme = 0;
+	//int freeme = 0;
 
 	(void)opt_codec_ctx;
 
@@ -148,7 +148,7 @@ NativeEnumerated_decode_aper(asn_codec_ctx_t *opt_codec_ctx,
 
 	if(!native) {
 		native = (long *)(*sptr = CALLOC(1, sizeof(*native)));
-		freeme = 1;
+		//freeme = 1;
 		if(!native) _ASN_DECODE_FAILED;
 	}
 
@@ -182,8 +182,8 @@ NativeEnumerated_decode_aper(asn_codec_ctx_t *opt_codec_ctx,
 	*native = specs->value2enum[value].nat_value;
 	ASN_DEBUG("Decoded %s = %ld", td->name, *native);
 
-	if (freeme)
-		free(native);
+	//if (freeme)
+	//	free(native);
 
 	return rval;
 }
