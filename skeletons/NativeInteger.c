@@ -280,14 +280,14 @@ NativeInteger_decode_aper(asn_codec_ctx_t *opt_codec_ctx,
 	long *native = (long *)*sptr;
 	INTEGER_t tmpint;
 	void *tmpintptr = &tmpint;
-	int dynamic = 0;
+	//int dynamic = 0;
 
 	(void)opt_codec_ctx;
 	ASN_DEBUG("Decoding NativeInteger %s (APER)", td->name);
 
 	if(!native) {
 		native = (long *)(*sptr = CALLOC(1, sizeof(*native)));
-		dynamic = 1;
+		//dynamic = 1;
 		if(!native) _ASN_DECODE_FAILED;
 	}
 
