@@ -25,6 +25,10 @@ int uper_open_type_put(const asn_TYPE_descriptor_t *td,
                        const asn_per_constraints_t *constraints,
                        const void *sptr, asn_per_outp_t *po);
 
+int aper_open_type_put(const asn_TYPE_descriptor_t *td,
+                       const asn_per_constraints_t *constraints,
+                       const void *sptr, asn_per_outp_t *po);
+
 #ifdef __cplusplus
 }
 #endif

@@ -64,6 +64,46 @@ uper_open_type_put(const asn_TYPE_descriptor_t *td,
     return 0;
 }
 
+/* TODO: this function may fail to work */
+int
+aper_open_type_put(const asn_TYPE_descriptor_t *td,
+                   const asn_per_constraints_t *constraints, const void *sptr,
+                   asn_per_outp_t *po) {
+    void *buf;
+    void *bptr;
+    ssize_t size;
+
+    ASN_DEBUG("Open type put %s ...", td->name);
+
+    size = aper_encode_to_new_buffer(td, constraints, sptr, &buf);
+    if(size <= 0) return -1;
+
+    ASN_DEBUG("Open type put %s of length %" ASN_PRI_SSIZE " + overhead (1byte?)", td->name,
+              size);
+
+    bptr = buf;
+    do {
+        int need_eom = 0;
+        ssize_t may_save = aper_put_length(po, -1, size);
+        ASN_DEBUG("Prepending length %" ASN_PRI_SSIZE
+                  " to %s and allowing to save %" ASN_PRI_SSIZE,
+                  size, td->name, may_save);
+        if(may_save < 0) break;
+        if(per_put_many_bits(po, bptr, may_save * 8)) break;
+        bptr = (char *)bptr + may_save;
+        size -= may_save;
+        if(need_eom && uper_put_length(po, 0, 0)) {
+            FREEMEM(buf);
+            return -1;
+        }
+    } while(size);
+
+    FREEMEM(buf);
+    if(size) return -1;
+
+    return 0;
+}
+
 static asn_dec_rval_t
 uper_open_type_get_simple(const asn_codec_ctx_t *ctx,
                           const asn_TYPE_descriptor_t *td,

@@ -105,6 +105,20 @@ int uper_put_nslength(asn_per_outp_t *po, size_t length);
  */
 int uper_put_nsnnwn(asn_per_outp_t *po, int n);
 
+
+ssize_t aper_get_length(asn_per_data_t *pd,
+                                               int range,
+                                               int effective_bound_bits,
+                                               int *repeat);
+ssize_t aper_get_nslength(asn_per_data_t *pd);
+ssize_t aper_get_nsnnwn(asn_per_data_t *pd, int range);
+/* Align the current bit position to octet bundary */
+int aper_put_align(asn_per_outp_t *po);
+int32_t aper_get_align(asn_per_data_t *pd);
+ssize_t aper_put_length(asn_per_outp_t *po, int range, size_t length);
+int aper_put_nslength(asn_per_outp_t *po, size_t length);
+int aper_put_nsnnwn(asn_per_outp_t *po, int range, int number);
+
 #ifdef __cplusplus
 }
 #endif

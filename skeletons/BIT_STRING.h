@@ -32,6 +32,8 @@ oer_type_decoder_f BIT_STRING_decode_oer;
 oer_type_encoder_f BIT_STRING_encode_oer;
 per_type_decoder_f BIT_STRING_decode_uper;
 per_type_encoder_f BIT_STRING_encode_uper;
+per_type_decoder_f BIT_STRING_decode_aper;
+per_type_encoder_f BIT_STRING_encode_aper;
 asn_random_fill_f  BIT_STRING_random_fill;
 
 #define BIT_STRING_free              OCTET_STRING_free
