@@ -94,7 +94,7 @@ static int emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode
 } while(0)
 
 /* MKID_safe() without checking for reserved keywords */
-#define	MKID(expr)	(asn1c_make_identifier(0, expr, 0))
+#define	MKID(expr)	(asn1c_make_identifier(AMI_USE_PREFIX, expr, 0))
 #define	MKID_safe(expr)	(asn1c_make_identifier(AMI_CHECK_RESERVED, expr, 0))
 
 int
@@ -389,7 +389,7 @@ asn1c_lang_C_type_SEQUENCE(arg_t *arg) {
 			c_name(arg).base_name);
 	} else {
 		OUT("} %s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
-			c_name(arg).short_name);
+			arg->embed ? c_name(arg).as_member : c_name(arg).short_name);
 		if(!expr->_anonymous_type) OUT(";\n");
 	}
 
@@ -632,7 +632,7 @@ asn1c_lang_C_type_SET(arg_t *arg) {
 			c_name(arg).base_name);
 	} else {
 		OUT("} %s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
-			c_name(arg).short_name);
+			arg->embed ? c_name(arg).as_member : c_name(arg).short_name);
 		if(!expr->_anonymous_type) OUT(";\n");
 	}
 
@@ -861,7 +861,7 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 			c_name(arg).base_name);
 	} else {
 		OUT("} %s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
-			c_name(arg).short_name);
+			arg->embed ? c_name(arg).as_member : c_name(arg).short_name);
 		if(!expr->_anonymous_type) OUT(";\n");
 	}
 
@@ -1016,7 +1016,7 @@ asn1c_lang_C_type_CHOICE(arg_t *arg) {
 			c_name(arg).base_name);
 	} else {
 		OUT("} %s%s", (expr->marker.flags & EM_INDIRECT)?"*":"",
-			c_name(arg).short_name);
+			arg->embed ? c_name(arg).as_member : c_name(arg).short_name);
 	}
 	if(!expr->_anonymous_type) OUT(";\n");
 
@@ -1237,7 +1237,7 @@ asn1c_lang_C_type_REFERENCE_Value(arg_t *arg) {
 	if((ref_type->expr_type == ASN_BASIC_INTEGER) ||
 		(ref_type->expr_type == ASN_BASIC_ENUMERATED)) {
 		OUT("#define %s_", MKID(ref_type));
-		OUT("%s\t", MKID(expr));
+		OUT("%s\t", c_name(arg).base_name);
 		OUT("((%s)", asn1c_type_name(arg, expr, TNF_CTYPE));
 		OUT("%s)\n", asn1p_itoa(expr->value->value.v_integer));
 	}
