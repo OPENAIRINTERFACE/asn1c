@@ -19,6 +19,8 @@ xer_type_decoder_f Int1_decode_xer;
 xer_type_encoder_f Int1_encode_xer;
 per_type_decoder_f Int1_decode_uper;
 per_type_encoder_f Int1_encode_uper;
+per_type_decoder_f Int1_decode_aper;
+per_type_encoder_f Int1_encode_aper;
 #define Int1_ten	((Int1_t)10)
 
 /*** <<< CODE [Int1] >>> ***/
@@ -70,6 +72,8 @@ xer_type_decoder_f Int2_decode_xer;
 xer_type_encoder_f Int2_encode_xer;
 per_type_decoder_f Int2_decode_uper;
 per_type_encoder_f Int2_encode_uper;
+per_type_decoder_f Int2_decode_aper;
+per_type_encoder_f Int2_encode_aper;
 
 /*** <<< CODE [Int2] >>> ***/
 
@@ -150,6 +154,8 @@ xer_type_decoder_f Int3_decode_xer;
 xer_type_encoder_f Int3_encode_xer;
 per_type_decoder_f Int3_decode_uper;
 per_type_encoder_f Int3_encode_uper;
+per_type_decoder_f Int3_decode_aper;
+per_type_encoder_f Int3_encode_aper;
 
 /*** <<< CODE [Int3] >>> ***/
 
@@ -233,6 +239,8 @@ xer_type_decoder_f Int4_decode_xer;
 xer_type_encoder_f Int4_encode_xer;
 per_type_decoder_f Int4_decode_uper;
 per_type_encoder_f Int4_encode_uper;
+per_type_decoder_f Int4_decode_aper;
+per_type_encoder_f Int4_encode_aper;
 
 /*** <<< CODE [Int4] >>> ***/
 
@@ -316,6 +324,8 @@ xer_type_decoder_f Int5_decode_xer;
 xer_type_encoder_f Int5_encode_xer;
 per_type_decoder_f Int5_decode_uper;
 per_type_encoder_f Int5_encode_uper;
+per_type_decoder_f Int5_decode_aper;
+per_type_encoder_f Int5_encode_aper;
 
 /*** <<< CODE [Int5] >>> ***/
 
@@ -398,6 +408,8 @@ xer_type_decoder_f ExtensibleExtensions_decode_xer;
 xer_type_encoder_f ExtensibleExtensions_encode_xer;
 per_type_decoder_f ExtensibleExtensions_decode_uper;
 per_type_encoder_f ExtensibleExtensions_encode_uper;
+per_type_decoder_f ExtensibleExtensions_decode_aper;
+per_type_encoder_f ExtensibleExtensions_encode_aper;
 
 /*** <<< CODE [ExtensibleExtensions] >>> ***/
 
@@ -481,6 +493,8 @@ xer_type_decoder_f Str1_decode_xer;
 xer_type_encoder_f Str1_encode_xer;
 per_type_decoder_f Str1_decode_uper;
 per_type_encoder_f Str1_encode_uper;
+per_type_decoder_f Str1_decode_aper;
+per_type_encoder_f Str1_encode_aper;
 
 /*** <<< CODE [Str1] >>> ***/
 
@@ -539,6 +553,8 @@ xer_type_decoder_f Str2_decode_xer;
 xer_type_encoder_f Str2_encode_xer;
 per_type_decoder_f Str2_decode_uper;
 per_type_encoder_f Str2_encode_uper;
+per_type_decoder_f Str2_decode_aper;
+per_type_encoder_f Str2_encode_aper;
 
 /*** <<< CTABLES [Str2] >>> ***/
 
@@ -639,6 +655,8 @@ xer_type_decoder_f Str3_decode_xer;
 xer_type_encoder_f Str3_encode_xer;
 per_type_decoder_f Str3_decode_uper;
 per_type_encoder_f Str3_encode_uper;
+per_type_decoder_f Str3_decode_aper;
+per_type_encoder_f Str3_encode_aper;
 
 /*** <<< CTABLES [Str3] >>> ***/
 
@@ -764,6 +782,8 @@ xer_type_decoder_f Str4_decode_xer;
 xer_type_encoder_f Str4_encode_xer;
 per_type_decoder_f Str4_decode_uper;
 per_type_encoder_f Str4_encode_uper;
+per_type_decoder_f Str4_decode_aper;
+per_type_encoder_f Str4_encode_aper;
 
 /*** <<< CTABLES [Str4] >>> ***/
 
@@ -862,6 +882,8 @@ xer_type_decoder_f PER_Visible_decode_xer;
 xer_type_encoder_f PER_Visible_encode_xer;
 per_type_decoder_f PER_Visible_decode_uper;
 per_type_encoder_f PER_Visible_encode_uper;
+per_type_decoder_f PER_Visible_decode_aper;
+per_type_encoder_f PER_Visible_encode_aper;
 
 /*** <<< CTABLES [PER-Visible] >>> ***/
 
@@ -959,6 +981,8 @@ xer_type_decoder_f PER_Visible_2_decode_xer;
 xer_type_encoder_f PER_Visible_2_encode_xer;
 per_type_decoder_f PER_Visible_2_decode_uper;
 per_type_encoder_f PER_Visible_2_encode_uper;
+per_type_decoder_f PER_Visible_2_decode_aper;
+per_type_encoder_f PER_Visible_2_encode_aper;
 
 /*** <<< CTABLES [PER-Visible-2] >>> ***/
 
@@ -1056,6 +1080,8 @@ xer_type_decoder_f Not_PER_Visible_1_decode_xer;
 xer_type_encoder_f Not_PER_Visible_1_encode_xer;
 per_type_decoder_f Not_PER_Visible_1_decode_uper;
 per_type_encoder_f Not_PER_Visible_1_encode_uper;
+per_type_decoder_f Not_PER_Visible_1_decode_aper;
+per_type_encoder_f Not_PER_Visible_1_encode_aper;
 
 /*** <<< CTABLES [Not-PER-Visible-1] >>> ***/
 
@@ -1153,6 +1179,8 @@ xer_type_decoder_f Not_PER_Visible_2_decode_xer;
 xer_type_encoder_f Not_PER_Visible_2_encode_xer;
 per_type_decoder_f Not_PER_Visible_2_decode_uper;
 per_type_encoder_f Not_PER_Visible_2_encode_uper;
+per_type_decoder_f Not_PER_Visible_2_decode_aper;
+per_type_encoder_f Not_PER_Visible_2_encode_aper;
 
 /*** <<< CTABLES [Not-PER-Visible-2] >>> ***/
 
@@ -1250,6 +1278,8 @@ xer_type_decoder_f Not_PER_Visible_3_decode_xer;
 xer_type_encoder_f Not_PER_Visible_3_encode_xer;
 per_type_decoder_f Not_PER_Visible_3_decode_uper;
 per_type_encoder_f Not_PER_Visible_3_encode_uper;
+per_type_decoder_f Not_PER_Visible_3_decode_aper;
+per_type_encoder_f Not_PER_Visible_3_encode_aper;
 
 /*** <<< CTABLES [Not-PER-Visible-3] >>> ***/
 
@@ -1347,6 +1377,8 @@ xer_type_decoder_f SIZE_but_not_FROM_decode_xer;
 xer_type_encoder_f SIZE_but_not_FROM_encode_xer;
 per_type_decoder_f SIZE_but_not_FROM_decode_uper;
 per_type_encoder_f SIZE_but_not_FROM_encode_uper;
+per_type_decoder_f SIZE_but_not_FROM_decode_aper;
+per_type_encoder_f SIZE_but_not_FROM_encode_aper;
 
 /*** <<< CTABLES [SIZE-but-not-FROM] >>> ***/
 
@@ -1447,6 +1479,8 @@ xer_type_decoder_f SIZE_and_FROM_decode_xer;
 xer_type_encoder_f SIZE_and_FROM_encode_xer;
 per_type_decoder_f SIZE_and_FROM_decode_uper;
 per_type_encoder_f SIZE_and_FROM_encode_uper;
+per_type_decoder_f SIZE_and_FROM_decode_aper;
+per_type_encoder_f SIZE_and_FROM_encode_aper;
 
 /*** <<< CTABLES [SIZE-and-FROM] >>> ***/
 
@@ -1547,6 +1581,8 @@ xer_type_decoder_f Neither_SIZE_nor_FROM_decode_xer;
 xer_type_encoder_f Neither_SIZE_nor_FROM_encode_xer;
 per_type_decoder_f Neither_SIZE_nor_FROM_decode_uper;
 per_type_encoder_f Neither_SIZE_nor_FROM_encode_uper;
+per_type_decoder_f Neither_SIZE_nor_FROM_decode_aper;
+per_type_encoder_f Neither_SIZE_nor_FROM_encode_aper;
 
 /*** <<< CTABLES [Neither-SIZE-nor-FROM] >>> ***/
 
@@ -1644,6 +1680,8 @@ xer_type_decoder_f Utf8_4_decode_xer;
 xer_type_encoder_f Utf8_4_encode_xer;
 per_type_decoder_f Utf8_4_decode_uper;
 per_type_encoder_f Utf8_4_encode_uper;
+per_type_decoder_f Utf8_4_decode_aper;
+per_type_encoder_f Utf8_4_encode_aper;
 
 /*** <<< CTABLES [Utf8-4] >>> ***/
 
@@ -1735,6 +1773,8 @@ xer_type_decoder_f Utf8_3_decode_xer;
 xer_type_encoder_f Utf8_3_encode_xer;
 per_type_decoder_f Utf8_3_decode_uper;
 per_type_encoder_f Utf8_3_encode_uper;
+per_type_decoder_f Utf8_3_decode_aper;
+per_type_encoder_f Utf8_3_encode_aper;
 
 /*** <<< CTABLES [Utf8-3] >>> ***/
 
@@ -1855,6 +1895,8 @@ xer_type_decoder_f Utf8_2_decode_xer;
 xer_type_encoder_f Utf8_2_encode_xer;
 per_type_decoder_f Utf8_2_decode_uper;
 per_type_encoder_f Utf8_2_encode_uper;
+per_type_decoder_f Utf8_2_decode_aper;
+per_type_encoder_f Utf8_2_encode_aper;
 
 /*** <<< CODE [Utf8-2] >>> ***/
 
@@ -1944,6 +1986,8 @@ xer_type_decoder_f Utf8_1_decode_xer;
 xer_type_encoder_f Utf8_1_encode_xer;
 per_type_decoder_f Utf8_1_decode_uper;
 per_type_encoder_f Utf8_1_encode_uper;
+per_type_decoder_f Utf8_1_decode_aper;
+per_type_encoder_f Utf8_1_encode_aper;
 
 /*** <<< CODE [Utf8-1] >>> ***/
 
@@ -1993,6 +2037,8 @@ xer_type_decoder_f VisibleIdentifier_decode_xer;
 xer_type_encoder_f VisibleIdentifier_encode_xer;
 per_type_decoder_f VisibleIdentifier_decode_uper;
 per_type_encoder_f VisibleIdentifier_encode_uper;
+per_type_decoder_f VisibleIdentifier_decode_aper;
+per_type_encoder_f VisibleIdentifier_encode_aper;
 
 /*** <<< CTABLES [VisibleIdentifier] >>> ***/
 
@@ -2546,6 +2592,8 @@ xer_type_decoder_f Enum0_decode_xer;
 xer_type_encoder_f Enum0_encode_xer;
 per_type_decoder_f Enum0_decode_uper;
 per_type_encoder_f Enum0_encode_uper;
+per_type_decoder_f Enum0_decode_aper;
+per_type_encoder_f Enum0_encode_aper;
 
 /*** <<< CODE [Enum0] >>> ***/
 
@@ -2627,6 +2675,8 @@ xer_type_decoder_f Enum1_decode_xer;
 xer_type_encoder_f Enum1_encode_xer;
 per_type_decoder_f Enum1_decode_uper;
 per_type_encoder_f Enum1_encode_uper;
+per_type_decoder_f Enum1_decode_aper;
+per_type_encoder_f Enum1_encode_aper;
 
 /*** <<< CODE [Enum1] >>> ***/
 
@@ -2727,6 +2777,8 @@ xer_type_decoder_f Identifier_decode_xer;
 xer_type_encoder_f Identifier_encode_xer;
 per_type_decoder_f Identifier_decode_uper;
 per_type_encoder_f Identifier_encode_uper;
+per_type_decoder_f Identifier_decode_aper;
+per_type_encoder_f Identifier_encode_aper;
 
 /*** <<< CTABLES [Identifier] >>> ***/
 
