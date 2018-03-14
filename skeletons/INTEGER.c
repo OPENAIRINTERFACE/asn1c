@@ -324,6 +324,8 @@ INTEGER_st_prealloc(INTEGER_t *st, int min_size) {
 static enum xer_pbd_rval
 INTEGER__xer_body_decode(const asn_TYPE_descriptor_t *td, void *sptr,
                          const void *chunk_buf, size_t chunk_size) {
+    const asn_INTEGER_specifics_t *specs =
+        (const asn_INTEGER_specifics_t *)td->specifics;
     INTEGER_t *st = (INTEGER_t *)sptr;
 	intmax_t dec_value;
 	intmax_t hex_value = 0;
@@ -505,7 +507,9 @@ INTEGER__xer_body_decode(const asn_TYPE_descriptor_t *td, void *sptr,
 		/* The last symbol encountered was a digit. */
         switch(asn_strtoimax_lim(dec_value_start, &dec_value_end, &dec_value)) {
         case ASN_STRTOX_OK:
-            if(dec_value >= LONG_MIN && dec_value <= LONG_MAX) {
+            if(specs && specs->field_unsigned && dec_value <= ULONG_MAX) {
+                break;
+            } else if(dec_value >= LONG_MIN && dec_value <= LONG_MAX) {
                 break;
             } else {
                 /*
