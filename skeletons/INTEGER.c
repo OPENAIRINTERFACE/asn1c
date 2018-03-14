@@ -879,7 +879,7 @@ INTEGER_decode_aper(const asn_codec_ctx_t *opt_codec_ctx,
 
 				value += ct->lower_bound;
 				if((specs && specs->field_unsigned)
-				        ? asn_uint642INTEGER(st, value)
+				        ? asn_uint642INTEGER(st, (unsigned long)value)
 				        : asn_int642INTEGER(st, value))
 					ASN__DECODE_FAILED;
 				ASN_DEBUG("Got value %ld + low %ld",
