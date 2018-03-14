@@ -1044,7 +1044,7 @@ INTEGER_encode_aper(const asn_TYPE_descriptor_t *td,
 				ASN__ENCODE_FAILED;
 		} else {
 			/* TODO: extend to >64 bits */
-			long v64 = v;
+			int64_t v64 = v;
 			int i, j;
 			int max_range_bytes = (ct->range_bits >> 3) +
 			                      (((ct->range_bits % 8) > 0) ? 1 : 0);
@@ -1056,7 +1056,7 @@ INTEGER_encode_aper(const asn_TYPE_descriptor_t *td,
 			}
 
 			for (j = sizeof(int64_t) -1; j != 0; j--) {
-				uint8_t val;
+				int64_t val;
 				val = v64 >> (j * 8);
 				if (val != 0)
 					break;
