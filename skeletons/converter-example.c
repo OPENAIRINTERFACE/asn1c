@@ -717,9 +717,11 @@ static void add_bytes_to_buffer(const void *data2add, size_t bytes) {
             perror("malloc()");
             exit(EX_OSERR);
         }
-        memcpy(p,
-            DynamicBuffer.data + DynamicBuffer.offset,
-            DynamicBuffer.length);
+		if (DynamicBuffer.length) {
+			memcpy(p,
+					DynamicBuffer.data + DynamicBuffer.offset,
+					DynamicBuffer.length);
+		}
         FREEMEM(DynamicBuffer.data);
         DynamicBuffer.data = (uint8_t *)p;
         DynamicBuffer.offset = 0;
