@@ -58,7 +58,7 @@ asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_ps
 	if(!exc) return NULL;
 	if(rarg.resolved_name) {
 		free(exc->Identifier);
-		exc->Identifier = strdup(rarg.resolved_name);
+		exc->Identifier = rarg.resolved_name;
 		exc->_lineno = 0;
 	}
 	rpc = asn1p_expr_clone(rhs_pspecs, 0);
@@ -147,12 +147,13 @@ resolve_expr(asn1p_expr_t *expr_to_resolve, void *resolver_arg) {
 			? strdup(expr_to_resolve->Identifier) : 0;
 		if(expr->meta_type == AMT_TYPEREF) {
 			asn1p_ref_t *ref = expr->reference;
-			rarg->resolved_name = ref->components[ref->comp_count - 1].name;
+			rarg->resolved_name = calloc(1, strlen(rarg->original_expr->Identifier) + strlen(ref->components[ref->comp_count - 1].name) + 2);
+			sprintf(rarg->resolved_name, "%s_%s", rarg->original_expr->Identifier, ref->components[ref->comp_count - 1].name);
 		} else if(expr->meta_type == AMT_VALUESET) {
 			asn1p_constraint_t *ct = expr->constraints;
 			if(ct->type == ACT_EL_TYPE) {
 				asn1p_ref_t *ref = ct->containedSubtype->value.v_type->reference;
-				rarg->resolved_name = ref->components[ref->comp_count - 1].name;
+				rarg->resolved_name = strdup(ref->components[ref->comp_count - 1].name);
 			}
 		}
 		return nex;
