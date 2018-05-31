@@ -968,14 +968,29 @@ generate_constant_collection(arg_t *arg) {
 
     TQ_FOR(mod, &(arg->asn->modules), mod_next) {
         TQ_FOR(arg->expr, &(mod->members), next) {
-            if(arg->expr->meta_type != AMT_VALUE)
+            if(arg->expr->expr_type != ASN_BASIC_INTEGER)
                 continue;
 
-            if(arg->expr->expr_type == ASN_BASIC_INTEGER) {
+            if(arg->expr->meta_type == AMT_VALUE) {
                 abuf_printf(buf, "#define %s (%s)\n",
                             asn1c_make_identifier(AMI_USE_PREFIX, arg->expr, 0),
                             asn1p_itoa(arg->expr->value->value.v_integer));
                 empty_file = 0;
+            }
+
+            if(arg->expr->meta_type == AMT_TYPE) {
+                if(arg->expr->constraints) {
+                    if(arg->expr->constraints->el_count == 1 &&
+                       arg->expr->constraints->elements[0]->type == ACT_EL_RANGE) {
+                        abuf_printf(buf, "#define min_val_%s (%s)\n",
+                                    asn1c_make_identifier(AMI_USE_PREFIX, arg->expr, 0),
+                                    asn1p_itoa(arg->expr->constraints->elements[0]->range_start->value.v_integer));
+                        abuf_printf(buf, "#define max_val_%s (%s)\n",
+                                    asn1c_make_identifier(AMI_USE_PREFIX, arg->expr, 0),
+                                    asn1p_itoa(arg->expr->constraints->elements[0]->range_stop->value.v_integer));
+                        empty_file = 0;
+                    } 
+                }
             }
         }
     }
