@@ -870,6 +870,8 @@ asn_TYPE_descriptor_t asn_DEF_ClassItem = {
 extern "C" {
 #endif
 
+#define min_val_PacketId (0)
+#define max_val_PacketId (65535)
 #define max_items (256)
 
 

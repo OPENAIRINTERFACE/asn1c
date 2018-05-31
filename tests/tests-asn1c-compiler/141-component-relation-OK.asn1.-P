@@ -413,6 +413,8 @@ asn_TYPE_descriptor_t asn_DEF_ComplexMessage = {
 extern "C" {
 #endif
 
+#define min_val_ConstrainedInteger (0)
+#define max_val_ConstrainedInteger (32767)
 #define primMessage (1)
 #define cplxMessage (2)
 
