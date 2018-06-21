@@ -147,8 +147,6 @@ int
 asn1p_ref_compare(const asn1p_ref_t *a, const asn1p_ref_t *b) {
     if(a->comp_count != b->comp_count)
         return -1;
-    if(a->module != b->module)
-        return -1;
 
     for(size_t i = 0; i < a->comp_count; i++) {
         if(a->components[i].lex_type != b->components[i].lex_type
