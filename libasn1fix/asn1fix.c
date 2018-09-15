@@ -65,6 +65,15 @@ asn1f_process(asn1p_t *asn, enum asn1f_flags flags,
 		}
 	}
 
+	if(flags & A1F_COMPOUND_NAMES) {
+		arg.flags |= A1F_COMPOUND_NAMES;
+		flags &= ~A1F_COMPOUND_NAMES;
+		if(arg.debug) {
+			arg.debug(-1,
+				"Allow the same symbol name defined in two different modules");
+		}
+	}
+
 	a1f_replace_me_with_proper_interface_arg = arg;
 
 	/*
@@ -515,8 +524,9 @@ asn1f_check_duplicate(arg_t *arg) {
 
 			/* resolve clash of Identifier in different modules */
 			int oid_exist = (tmparg.expr->module->module_oid && arg->expr->module->module_oid);
-			if ((!oid_exist && strcmp(tmparg.expr->module->ModuleName, arg->expr->module->ModuleName)) ||
-				(oid_exist && !asn1p_oid_compare(tmparg.expr->module->module_oid, arg->expr->module->module_oid))) {
+			if ((arg->flags & A1F_COMPOUND_NAMES) &&
+				((!oid_exist && strcmp(tmparg.expr->module->ModuleName, arg->expr->module->ModuleName)) ||
+				 (oid_exist && asn1p_oid_compare(tmparg.expr->module->module_oid, arg->expr->module->module_oid)))) {
 
 				tmparg.expr->_mark |= TM_NAMECLASH;
 				arg->expr->_mark |= TM_NAMECLASH;
