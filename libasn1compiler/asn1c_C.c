@@ -1481,7 +1481,7 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
                || (expr->expr_type == ASN_BASIC_INTEGER)) {
                 OUT("extern const asn_INTEGER_specifics_t "
                     "asn_SPC_%s_specs_%d;\n",
-                    c_name(arg).base_name, expr->_type_unique_index);
+                    MKID(expr), expr->_type_unique_index);
             } else {
                 asn1p_expr_t *terminal = WITH_MODULE_NAMESPACE(
                     expr->module, expr_ns,
