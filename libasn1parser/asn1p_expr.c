@@ -333,6 +333,21 @@ asn1p_lookup_child(asn1p_expr_t *tc, const char *name) {
 	return NULL;
 }
 
+int
+asn1p_lookup_child_count_by_name(asn1p_expr_t *tc, const char *name) {
+	asn1p_expr_t *child_tc;
+	int count = 0;
+
+	TQ_FOR(child_tc, &(tc->members), next) {
+		if(child_tc->Identifier
+		&& strcmp(child_tc->Identifier, name) == 0) {
+			count++;
+		}
+	}
+
+	return count;
+}
+
 /*
  * Destruct the types collection structure.
  */

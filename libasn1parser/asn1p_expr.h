@@ -281,6 +281,7 @@ asn1p_expr_t *asn1p_expr_clone_with_resolver(asn1p_expr_t *,
 void asn1p_expr_add(asn1p_expr_t *to, asn1p_expr_t *what);
 void asn1p_expr_add_many(asn1p_expr_t *to, asn1p_expr_t *from_what);
 asn1p_expr_t *asn1p_lookup_child(asn1p_expr_t *tc, const char *name);
+int asn1p_lookup_child_count_by_name(asn1p_expr_t *tc, const char *name);
 int asn1p_expr_compare(const asn1p_expr_t *, const asn1p_expr_t *);
 void asn1p_expr_free(asn1p_expr_t *expr);
 void asn1p_expr_set_source(asn1p_expr_t *, asn1p_module_t *, int lineno);

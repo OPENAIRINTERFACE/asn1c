@@ -94,8 +94,13 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 		size += strlen(expr->Identifier);
 		if(expr->spec_index != -1 && expr->_lineno) {
 			static char buf[32];
-			size += 1 + snprintf(buf, sizeof buf, "%dP%d",
-				expr->_lineno, expr->spec_index);
+
+			if(expr->_lineno > 0)
+				size += 1 + snprintf(buf, sizeof buf, "%dP%d",
+					expr->_lineno, expr->spec_index);
+			else if(expr->_lineno < 0)
+				size += 1 + snprintf(buf, sizeof buf, "%d",
+					expr->spec_index);
 			sptr[sptr_cnt++] = (char *)&buf;
 		}
 	} else {

@@ -78,7 +78,10 @@ typedef enum value_PR {
 	value_PR_NOTHING,	/* No components present */
 	value_PR_INTEGER,
 	value_PR_BOOLEAN,
-	value_PR_OCTET_STRING
+	value_PR_OCTET_STRING,
+	value_PR_INTEGER_1,
+	value_PR_BOOLEAN_1,
+	value_PR_OCTET_STRING_1
 } value_PR;
 
 /*** <<< TYPE-DECLS [SpecializedContent] >>> ***/
@@ -91,6 +94,9 @@ typedef struct TotalRegionExtension {
 			long	 INTEGER;
 			BOOLEAN_t	 BOOLEAN;
 			OCTET_STRING_t	 OCTET_STRING;
+			long	 INTEGER_1;
+			BOOLEAN_t	 BOOLEAN_1;
+			OCTET_STRING_t	 OCTET_STRING_1;
 		} choice;
 		
 		/* Context for parsing across buffer boundaries */
@@ -244,13 +250,43 @@ static asn_TYPE_member_t asn_MBR_value_3[] = {
 		0, 0, /* No default value */
 		.name = "OCTET STRING"
 		},
+	{ ATF_NOFLAGS, 0, offsetof(struct value, choice.INTEGER_1),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_NativeInteger,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "INTEGER"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct value, choice.BOOLEAN_1),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_BOOLEAN,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "BOOLEAN"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct value, choice.OCTET_STRING_1),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_OCTET_STRING,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "OCTET STRING"
+		},
 };
-static const unsigned asn_MAP_value_to_canonical_3[] = { 1, 0, 2 };
-static const unsigned asn_MAP_value_from_canonical_3[] = { 1, 0, 2 };
+static const unsigned asn_MAP_value_to_canonical_3[] = { 1, 4, 0, 3, 2, 5 };
+static const unsigned asn_MAP_value_from_canonical_3[] = { 2, 0, 4, 3, 1, 5 };
 static const asn_TYPE_tag2member_t asn_MAP_value_tag2el_3[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 1, 0, 0 }, /* BOOLEAN */
-    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* INTEGER */
-    { (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)), 2, 0, 0 } /* OCTET STRING */
+    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 1, 0, 1 }, /* BOOLEAN */
+    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 4, -1, 0 }, /* BOOLEAN */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 1 }, /* INTEGER */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 3, -1, 0 }, /* INTEGER */
+    { (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)), 2, 0, 1 }, /* OCTET STRING */
+    { (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)), 5, -1, 0 } /* OCTET STRING */
 };
 static asn_CHOICE_specifics_t asn_SPC_value_specs_3 = {
 	sizeof(struct value),
@@ -258,7 +294,7 @@ static asn_CHOICE_specifics_t asn_SPC_value_specs_3 = {
 	offsetof(struct value, present),
 	sizeof(((struct value *)0)->present),
 	.tag2el = asn_MAP_value_tag2el_3,
-	.tag2el_count = 3,	/* Count of tags in the map */
+	.tag2el_count = 6,	/* Count of tags in the map */
 	.to_canonical_order = asn_MAP_value_to_canonical_3,
 	.from_canonical_order = asn_MAP_value_from_canonical_3,
 	.first_extension = -1	/* Extensions start */
@@ -274,7 +310,7 @@ asn_TYPE_descriptor_t asn_DEF_value_3 = {
 	0,	/* No tags (count) */
 	{ 0, 0, OPEN_TYPE_constraint },
 	asn_MBR_value_3,
-	3,	/* Elements count */
+	6,	/* Elements count */
 	&asn_SPC_value_specs_3	/* Additional specs */
 };
 

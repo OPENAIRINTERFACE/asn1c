@@ -1100,10 +1100,14 @@ asn1c_lang_C_OpenType(arg_t *arg, asn1c_ioc_table_and_objset_t *opt_ioc,
 
         if(!cell->value) continue;
 
-        if(asn1p_lookup_child(open_type_choice, cell->value->Identifier))
-            continue;
-
         asn1p_expr_t *m = asn1p_expr_clone(cell->value, 0);
+
+        int n = asn1p_lookup_child_count_by_name(open_type_choice, cell->value->Identifier);
+        if (n) {
+            m->spec_index = n;
+            m->_lineno = -1;
+        }
+
         asn1p_expr_add(open_type_choice, m);
     }
 
