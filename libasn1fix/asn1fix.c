@@ -283,6 +283,26 @@ asn1f_fix_module__phase_2(arg_t *arg) {
 		ret = asn1f_recurse_expr(arg, asn1f_check_constraints);
 		RET2RVAL(ret, rvalue);
 
+		if (expr->ioc_table) {
+			for (size_t rn = 0; rn < expr->ioc_table->rows; rn++) {
+				for (size_t cn = 0; cn < expr->ioc_table->row[rn]->columns; cn++) {
+					if (!expr->ioc_table->row[rn]->column[cn].value) {
+						continue;
+					}
+					arg->expr = expr->ioc_table->row[rn]->column[cn].value;
+					ret = asn1f_recurse_expr(arg, asn1f_fix_dereference_defaults);
+					RET2RVAL(ret, rvalue);
+
+					ret = asn1f_recurse_expr(arg, asn1f_resolve_constraints);
+					RET2RVAL(ret, rvalue);
+
+					ret = asn1f_recurse_expr(arg, asn1f_check_constraints);
+					RET2RVAL(ret, rvalue);
+				}
+			}
+			arg->expr = expr;
+		}
+
 		/*
 		 * Uniquely tag each inner type.
 		 */
