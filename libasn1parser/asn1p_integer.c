@@ -109,6 +109,22 @@ const char *asn1p_itoa(asn1c_integer_t v) {
     }
 }
 
+static const char *asn1p_integer_suffix(int sign, asn1c_integer_t v) {
+    if (sign) {
+        return "";
+    } else {
+        if (v > LLONG_MAX) {
+            return "ULL";
+        } else if (v > LONG_MAX) {
+            return "UL";
+        } else if (v >= INT_MAX) {
+            return "U";
+        } else {
+            return "";
+        }
+    }
+}
+
 int asn1p_itoa_s(char *buf, size_t size, asn1c_integer_t v) {
     char tmp_buf[128];
 
@@ -153,8 +169,8 @@ int asn1p_itoa_s(char *buf, size_t size, asn1c_integer_t v) {
 
     const char *head = asn1p_itoa(v / 1000000000L);
     assert(head);
-    int ret = snprintf(tmp_buf, sizeof(tmp_buf), "%s%s%s", sign ? "-" : "",
-                       head, rest);
+    int ret = snprintf(tmp_buf, sizeof(tmp_buf), "%s%s%s%s", sign ? "-" : "",
+                       head, rest, asn1p_integer_suffix(sign, v));
     if(ret < 0 || (size_t)ret >= size) {
         assert(ret > 0 && (size_t)ret < sizeof(tmp_buf));
         return -1;
